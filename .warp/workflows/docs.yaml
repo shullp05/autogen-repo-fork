@@ -1,0 +1,9 @@
+---
+name: Build and Serve Docs
+description: Clean, rebuild, and serve AutoGen documentation locally on port 8000
+command: |
+  cd python && source .venv/bin/activate && poe docs-clean && poe docs-build && poe docs-serve
+tags:
+  - docs
+  - documentation
+  - sphinx

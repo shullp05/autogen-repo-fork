@@ -1,0 +1,9 @@
+---
+name: Run All CI Checks
+description: Run format, lint, pyright, mypy, tests, docs, and samples checks
+command: |
+  cd python && source .venv/bin/activate && poe check
+tags:
+  - ci
+  - check
+  - pre-pr

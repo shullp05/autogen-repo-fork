@@ -1,0 +1,9 @@
+---
+name: Format and Lint
+description: Run ruff formatter and linter on all Python packages
+command: |
+  cd python && source .venv/bin/activate && poe fmt && poe lint
+tags:
+  - format
+  - lint
+  - ruff

@@ -1,0 +1,9 @@
+---
+name: Type Check
+description: Run pyright and mypy type checking across all packages
+command: |
+  cd python && source .venv/bin/activate && poe pyright && poe mypy
+tags:
+  - typecheck
+  - pyright
+  - mypy
