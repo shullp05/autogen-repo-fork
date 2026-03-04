@@ -1,0 +1,8 @@
+---
+name: Run Tests
+description: Run pytest across all AutoGen Python packages
+command: |
+  cd python && source .venv/bin/activate && poe test
+tags:
+  - test
+  - pytest

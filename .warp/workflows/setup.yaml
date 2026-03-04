@@ -1,0 +1,9 @@
+---
+name: Setup AutoGen Dev Environment
+description: Install uv, sync dependencies, and activate the virtual environment
+command: |
+  cd python && uv sync --all-extras && echo "✅ Dependencies synced. Run: source python/.venv/bin/activate"
+tags:
+  - setup
+  - install
+  - uv
