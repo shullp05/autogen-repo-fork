@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domo AI/BI — Agentic Inventory Management</title>
+
+  <!-- CDN: Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CDN: Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ═══════════════════ Header ═══════════════════ -->
+  <header class="app-header">
+    <div class="app-logo">
+      <!-- Domo-style logo icon -->
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="url(#grad)"/>
+        <path d="M8 16L16 8L24 16L16 24Z" fill="white" opacity="0.9"/>
+        <circle cx="16" cy="16" r="3" fill="url(#grad)"/>
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="32" y2="32">
+            <stop stop-color="#1a73e8"/>
+            <stop offset="1" stop-color="#0d9488"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <h1>Domo AI Inventory</h1>
+        <div class="subtitle">Multi-Agent Agentic System</div>
+      </div>
+    </div>
+
+    <div class="header-agents">
+      <div class="agent-indicator"><span class="agent-dot"></span> Orchestrator</div>
+      <div class="agent-indicator"><span class="agent-dot"></span> Top Items</div>
+      <div class="agent-indicator"><span class="agent-dot"></span> Dashboard</div>
+      <div class="agent-indicator"><span class="agent-dot"></span> Exceptions</div>
+      <div class="agent-indicator"><span class="agent-dot"></span> SKU Integration</div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════ Main Container ═══════════════════ -->
+  <div class="app-container">
+
+    <!-- ──── Left Panel: Agent Chat ──── -->
+    <aside class="panel-chat">
+      <div class="panel-header">Agent Chat</div>
+      <div id="chat-messages"></div>
+
+      <div class="quick-actions">
+        <button class="quick-btn" data-query="Show top 5 items">Top 5 Items</button>
+        <button class="quick-btn" data-query="Show dashboard">Dashboard</button>
+        <button class="quick-btn" data-query="Show exceptions">Exceptions</button>
+        <button class="quick-btn" data-query="Show critical alerts">Critical Alerts</button>
+        <button class="quick-btn" data-query="Inventory overview">Full Overview</button>
+        <button class="quick-btn" data-query="Top items in Electronics by margin">Electronics Margin</button>
+        <button class="quick-btn" data-query="Help">Help</button>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask the inventory agent..." autocomplete="off">
+        <button id="chat-send">Send</button>
+      </div>
+    </aside>
+
+    <!-- ──── Center Panel: Tabbed Content ──── -->
+    <main class="panel-content">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="top-items">Top Items</button>
+        <button class="tab-btn" data-tab="exceptions">Exception Report</button>
+        <button class="tab-btn" data-tab="sku">SKU Integration</button>
+      </div>
+
+      <!-- Dashboard Tab -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div id="dashboard-content">
+          <p class="muted" style="text-align:center;padding:40px">Loading dashboard...</p>
+        </div>
+      </div>
+
+      <!-- Top Items Tab -->
+      <div class="tab-panel" id="tab-top-items">
+        <div id="top-items-content">
+          <p class="muted" style="text-align:center;padding:40px">
+            Ask for top items via the chat panel or click the "Top 5 Items" button.
+          </p>
+        </div>
+      </div>
+
+      <!-- Exception Report Tab -->
+      <div class="tab-panel" id="tab-exceptions">
+        <div id="exceptions-content">
+          <p class="muted" style="text-align:center;padding:40px">
+            Request an exception report via the chat panel or click "Exceptions".
+          </p>
+        </div>
+      </div>
+
+      <!-- SKU Integration Tab -->
+      <div class="tab-panel" id="tab-sku">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <!-- Add SKU Form -->
+          <div>
+            <h3 style="margin-bottom:16px;color:var(--text-primary)">Add New SKU</h3>
+            <form id="sku-form">
+              <div class="sku-form-grid">
+                <div class="form-group">
+                  <label for="sku-code">SKU Code *</label>
+                  <input type="text" name="sku" id="sku-code" placeholder="e.g. ELEC-2001" required>
+                </div>
+                <div class="form-group">
+                  <label for="sku-name">Product Name *</label>
+                  <input type="text" name="name" id="sku-name" placeholder="Product name" required>
+                </div>
+                <div class="form-group">
+                  <label for="sku-category">Category *</label>
+                  <select name="category" id="sku-category" required>
+                    <option value="">Select category...</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Supplies">Supplies</option>
+                    <option value="Warehouse">Warehouse</option>
+                    <option value="Safety">Safety</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="sku-sub">Subcategory</label>
+                  <input type="text" name="subcategory" id="sku-sub" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                  <label for="sku-qty">Quantity *</label>
+                  <input type="number" name="qty" id="sku-qty" min="0" required>
+                </div>
+                <div class="form-group">
+                  <label for="sku-cost">Unit Cost ($) *</label>
+                  <input type="number" name="unitCost" id="sku-cost" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                  <label for="sku-price">Unit Price ($) *</label>
+                  <input type="number" name="unitPrice" id="sku-price" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                  <label for="sku-supplier">Supplier</label>
+                  <input type="text" name="supplier" id="sku-supplier" placeholder="Yosi" value="Yosi">
+                </div>
+                <div class="form-group full-width" style="display:flex;gap:12px;margin-top:8px">
+                  <button type="submit" class="btn btn-primary">Add SKU</button>
+                  <button type="button" class="btn btn-yosi" id="btn-yosi-import">Simulate Yosi Import (3 SKUs)</button>
+                </div>
+              </div>
+            </form>
+            <div id="sku-form-result"></div>
+          </div>
+
+          <!-- Recent SKUs -->
+          <div>
+            <div id="sku-recent">
+              <h4>Recently Added SKUs</h4>
+              <p class="muted">No SKUs added in this session yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ──── Right Panel: Alerts & Activity ──── -->
+    <aside class="panel-right">
+      <div class="right-section">
+        <h3>Active Alerts</h3>
+        <div id="alerts-content">
+          <div class="alert-empty">Scanning...</div>
+        </div>
+      </div>
+
+      <div class="right-section" style="flex:1;overflow-y:auto">
+        <h3>Agent Activity</h3>
+        <div id="activity-feed"></div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ═══════════════════ Scripts (order matters) ═══════════════════ -->
+  <script src="js/event-bus.js"></script>
+  <script src="js/data-store.js"></script>
+  <script src="js/agents/top-items.js"></script>
+  <script src="js/agents/dashboard.js"></script>
+  <script src="js/agents/exception-reporter.js"></script>
+  <script src="js/agents/sku-integration.js"></script>
+  <script src="js/agents/orchestrator.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Wire top-items and exceptions content into their tab panels -->
+  <script>
+    // Route formatted responses to their dedicated tab panels
+    window.EventBus.on('response:top-items', (evt) => {
+      const panel = document.getElementById('top-items-content');
+      if (panel && evt.payload.formatted) panel.innerHTML = evt.payload.formatted;
+    });
+    window.EventBus.on('response:exceptions', (evt) => {
+      const panel = document.getElementById('exceptions-content');
+      if (panel && evt.payload.formatted) panel.innerHTML = evt.payload.formatted;
+    });
+    window.EventBus.on('response:sku-add', (evt) => {
+      const panel = document.getElementById('sku-form-result');
+      if (panel && evt.payload.formatted) panel.innerHTML = evt.payload.formatted;
+    });
+    window.EventBus.on('response:sku-import', (evt) => {
+      const panel = document.getElementById('sku-form-result');
+      if (panel && evt.payload.formatted) panel.innerHTML = evt.payload.formatted;
+    });
+  </script>
+
+</body>
+</html>
